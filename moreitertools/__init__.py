@@ -2,7 +2,7 @@ __version__ = "0.1.0"
 
 import collections
 import itertools
-from typing import Iterable, Tuple
+from typing import Callable, Iterable, ParamSpec, Tuple, TypeVar
 
 
 def windows(iterable: Iterable, size: int) -> Iterable[Iterable]:
@@ -80,3 +80,39 @@ def dropuntil(iterable: Iterable, predicate) -> Iterable:
             break
 
     yield from it
+
+
+T = TypeVar("T")
+P = ParamSpec("P")
+
+
+def juxtapose(functions: Iterable[Callable[P, T]]) -> Callable[P, Iterable[T]]:
+    for function in functions:
+        if not callable(function):
+            raise TypeError("functions must be callable")
+
+    def _juxtapose(*args, **kwargs) -> Iterable[T]:
+        return (function(*args, **kwargs) for function in functions)
+
+    names = ", ".join(function.__name__ for function in functions)
+    _juxtapose.__name__ = f"juxtapose({names})"
+    _juxtapose.__doc__ = f"Apply each function in [{names}] to the same arguments"
+
+    return _juxtapose
+
+
+def minmax(*args, **kwargs):
+    return min(*args, **kwargs), max(*args, **kwargs)
+
+
+R = TypeVar("R")
+
+
+def compose(a: Callable[[T], R], b: Callable[P, T]) -> Callable[P, R]:
+    def _compose(*args, **kwargs):
+        return a(b(*args, **kwargs))
+
+    _compose.__name__ = f"compose({a.__name__}, {b.__name__})"
+    _compose.__doc__ = f"Compose {a.__name__} and {b.__name__}"
+
+    return _compose
