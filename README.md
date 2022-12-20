@@ -1,6 +1,7 @@
 # `moreitertools`
 
-A collection of some more itertools that are useful from time to time.
+A collection of some more `itertools` (and maybe some `functools` too) that are
+useful from time to time.
 
 ## `windows`
 
