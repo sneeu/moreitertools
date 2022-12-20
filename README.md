@@ -107,3 +107,13 @@ Inspired by Clojure’s `comp`. Applies functions right-to-left.
 >>> f(5)
 17
 ```
+
+## `flatten`
+
+Flatten any level of nested iterables into a single iterable.
+
+```python
+>>> from moreitertools import flatten
+>>> flatten([1, [2, 3], [4, [5, 6]]])
+[1, 2, 3, 4, 5, 6]
+```

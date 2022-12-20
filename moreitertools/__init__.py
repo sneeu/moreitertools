@@ -2,7 +2,7 @@ __version__ = "0.1.0"
 
 import collections
 import itertools
-from typing import Callable, Iterable, ParamSpec, Tuple, TypeVar
+from typing import Any, Callable, Iterable, ParamSpec, Tuple, TypeVar
 
 
 def windows(iterable: Iterable, size: int) -> Iterable[Iterable]:
@@ -116,3 +116,11 @@ def compose(a: Callable[[T], R], b: Callable[P, T]) -> Callable[P, R]:
     _compose.__doc__ = f"Compose {a.__name__} and {b.__name__}"
 
     return _compose
+
+
+def flatten(iterable: Iterable[Any]) -> Iterable[Any]:
+    for item in iterable:
+        if isinstance(item, collections.abc.Iterable):
+            yield from flatten(item)
+        else:
+            yield item
